@@ -1,4 +1,3 @@
-
 /////////////////////////// DNA DATUM
 /datum/dna
 	var/unique_enzymes
@@ -18,6 +17,7 @@
 	var/list/organ_dna = list()
 	///Body markings of the DNA's owner. This is for storing their original state for re-creating the character. They'll get changed on species mutation
 	var/list/list/body_markings = list()
+	var/list/customizer_entries = list()
 
 /datum/dna/New(mob/living/new_holder)
 	if(istype(new_holder))
@@ -50,8 +50,14 @@
 	destination.dna.features = features.Copy()
 	destination.dna.real_name = real_name
 	destination.dna.temporary_mutations = temporary_mutations.Copy()
+	destination.dna.customizer_entries = deepCopyList(customizer_entries)
 	if(transfer_SE)
 		destination.dna.mutation_index = mutation_index
+	if(ishuman(destination))
+		var/mob/living/carbon/human/H = destination
+		for(var/datum/customizer_entry/entry as anything in customizer_entries)
+			var/datum/customizer_choice/customizer_choice = CUSTOMIZER_CHOICE(entry.customizer_choice_type)
+			customizer_choice.apply_customizer_to_character(H, null, entry)
 
 /datum/dna/proc/copy_dna(datum/dna/new_dna)
 	new_dna.unique_enzymes = unique_enzymes
@@ -63,6 +69,7 @@
 	new_dna.species = new species.type
 	new_dna.real_name = real_name
 	new_dna.mutations = mutations.Copy()
+	new_dna.customizer_entries = deepCopyList(customizer_entries)
 
 //See mutation.dm for what 'class' does. 'time' is time till it removes itself in decimals. 0 for no timer
 /datum/dna/proc/add_mutation(mutation, class = MUT_OTHER, time)

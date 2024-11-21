@@ -2262,6 +2262,8 @@ Slots: [job.spawn_positions] [job.round_contrib_points ? "RCP: +[job.round_contr
 		character.update_body_parts(redraw = TRUE)
 
 	character.char_accent = char_accent
+	character.dna.customizer_entries = deepCopyList(customizer_entries)
+	apply_customizers_to_character(character)
 
 /datum/preferences/proc/get_default_name(name_id)
 	switch(name_id)
