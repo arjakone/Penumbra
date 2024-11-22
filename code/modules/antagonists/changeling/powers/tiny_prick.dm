@@ -180,7 +180,9 @@
 	log_combat(user, target, "stung", "extraction sting")
 	var/datum/antagonist/changeling/changeling = user.mind.has_antag_datum(/datum/antagonist/changeling)
 	if(!(changeling.has_dna(target.dna)))
-		changeling.add_new_profile(target)
+		var/datum/changelingprofile/prof = changeling.add_new_profile(target)
+		if(target.dna.organ_dna)
+			prof.organ_dna = target.dna.organ_dna.Copy()
 	return TRUE
 
 /datum/action/changeling/sting/mute

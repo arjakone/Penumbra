@@ -101,37 +101,28 @@ GLOBAL_VAR(changeling_team_objective_type) //If this is not null, we hand our th
 /proc/changeling_transform(mob/living/carbon/human/user, datum/changelingprofile/chosen_prof)
 	var/datum/dna/chosen_dna = chosen_prof.dna
 	user.real_name = chosen_prof.name
-
+	
+	// Do DNA transfer first (which includes species set)
 	chosen_dna.transfer_identity(user, 1)
+	
+	// Apply customizer data AFTER species change
+	if(chosen_prof.organ_dna)
+		user.dna.organ_dna = chosen_prof.organ_dna.Copy()
+		// Force regenerate organs with new DNA
+		user.dna.species.regenerate_organs(user, user.dna.species, TRUE)
+	
+	// Copy additional properties
+	user.dna.blood_type = chosen_dna.blood_type
+	user.dna.features = chosen_dna.features.Copy()
+	user.dna.body_markings = deepCopyList(chosen_dna.body_markings)
+	user.dna.real_name = chosen_dna.real_name
+	user.dna.temporary_mutations = chosen_dna.temporary_mutations.Copy()
+	user.dna.mutation_index = chosen_dna.mutation_index
+	
+	// Update appearance
 	user.updateappearance(mutcolor_update=1)
 	user.update_body()
-	user.domutcheck()
-
-	//vars hackery. not pretty, but better than the alternative.
-	for(var/slot in GLOB.slots)
-		if(istype(user.vars[slot], GLOB.slot2type[slot]) && !(chosen_prof.exists_list[slot])) //remove unnecessary flesh items
-			qdel(user.vars[slot])
-			continue
-
-		if((user.vars[slot] && !istype(user.vars[slot], GLOB.slot2type[slot])) || !(chosen_prof.exists_list[slot]))
-			continue
-
-		var/obj/item/C
-		var/equip = 0
-		if(!user.vars[slot])
-			var/thetype = GLOB.slot2type[slot]
-			equip = 1
-			C = new thetype(user)
-
-		else if(istype(user.vars[slot], GLOB.slot2type[slot]))
-			C = user.vars[slot]
-
-		C.appearance = chosen_prof.appearance_list[slot]
-		C.name = chosen_prof.name_list[slot]
-		C.flags_cover = chosen_prof.flags_cover_list[slot]
-		C.item_state = chosen_prof.item_state_list[slot]
-		C.mob_overlay_icon = chosen_prof.mob_overlay_icon_list[slot]
-		if(equip)
-			user.equip_to_slot_or_del(C, GLOB.slot2slot[slot])
-
-	user.regenerate_icons()
+	user.update_hair()
+	user.update_body_parts(TRUE)
+	user.update_mutations_overlay()
+	return TRUE

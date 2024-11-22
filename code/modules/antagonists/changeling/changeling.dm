@@ -499,16 +499,15 @@
 
 /datum/changelingprofile
 	var/name = "a bug"
-
 	var/protected = 0
-
 	var/datum/dna/dna = null
-	var/list/name_list = list() //associative list of slotname = itemname
+	var/list/name_list = list()
 	var/list/appearance_list = list()
 	var/list/flags_cover_list = list()
 	var/list/exists_list = list()
 	var/list/item_state_list = list()
 	var/list/mob_overlay_icon_list = list()
+	var/list/organ_dna = list()
 
 	var/underwear
 	var/undershirt
