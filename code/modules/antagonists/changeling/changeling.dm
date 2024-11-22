@@ -10,6 +10,7 @@
 	antag_moodlet = /datum/mood_event/focused
 	antag_hud_type = ANTAG_HUD_CHANGELING
 	antag_hud_name = "changeling"
+	rogue_enabled = TRUE
 
 	var/you_are_greet = TRUE
 	var/give_objectives = TRUE

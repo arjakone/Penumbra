@@ -2,7 +2,7 @@
 	name = "Transform"
 	desc = ""
 	button_icon_state = "transform"
-	chemical_cost = 5
+	chemical_cost = 0
 	dna_cost = 0
 	req_dna = 1
 	req_human = 1

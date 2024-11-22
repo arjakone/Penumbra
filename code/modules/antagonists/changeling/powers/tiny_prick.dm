@@ -168,7 +168,7 @@
 	desc = ""
 	helptext = "Will give you the DNA of my target, allowing you to transform into them."
 	button_icon_state = "sting_extract"
-	chemical_cost = 25
+	chemical_cost = 0
 	dna_cost = 0
 
 /datum/action/changeling/sting/extract_dna/can_sting(mob/user, mob/target)
